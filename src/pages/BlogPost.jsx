@@ -34,6 +34,7 @@ export default function BlogPost() {
                                 <div className="absolute inset-0 bg-gradient-to-t from-background to-transparent" />
                                 <div className="absolute bottom-0 left-0 right-0 px-6 py-4 text-white">
                                     <h1 className="text-3xl font-bold">{blog.title}</h1>
+                                    <p className="text-muted-background text-sm">{blog.description}</p>
                                     <div className="mt-2 flex items-center space-x-4 text-sm">
                                         <div>John Doe</div>
                                         <div>•</div>

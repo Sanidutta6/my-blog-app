@@ -68,7 +68,7 @@ export default function BlogList() {
                         <CardContent className="p-4">
                             <h3 className="text-lg font-semibold mb-2">{blog.title}</h3>
                             <p className="text-muted-foreground text-sm line-clamp-2">
-                                {blog.content}
+                                {blog.description}
                             </p>
                         </CardContent>
                         <CardFooter>

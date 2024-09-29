@@ -2,7 +2,8 @@ import supabase from "@/lib/supabase";
 import { nanoid } from "nanoid";
 
 const uploadImage = async (file, isAvatarImg = false) => {
-    const path = isAvatarImg ? `profile_pics/avatar_${nanoid()}_${file.name.split('\\').pop()}` : `post_banner/banner_${nanoid()}_${file.name.split('\\').pop()}`;
+    console.log(file)
+    const path = isAvatarImg ? `profile_pics/avatar_${nanoid()}_${file.name}` : `post_banner/banner_${nanoid()}_${file.name}`;
     const { data, error } = await supabase
         .storage
         .from('images')
@@ -79,22 +80,48 @@ const signOutUser = async (email) => {
     return { success: true };
 }
 
-const createPost = async (authorId, title, slug, bannerImg, content) => {
-    const response = uploadImage(bannerImg, false);
+const createPost = async (authorId, title, description, slug, bannerImg, content, category, status) => {
+    try {
+        console.log("createPost::", { authorId, title, description, slug, bannerImg, content, category, status });
 
-    if (!response.success) return { success: false, message: response.message };
+        // Ensure the image upload is awaited
+        const response = await uploadImage(bannerImg, false);
 
-    const { data, error } = await supabase
-        .from('posts')
-        .insert([
-            { author_id: authorId, title, slug, content, banner_url: response.url },
-        ])
-        .select();
+        if (!response.success) {
+            return { success: false, message: response.message };
+        }
 
-    if (error) return { success: true, message: error.message };
+        console.log("createPost::", response.url);
 
-    return { success: true, data };
-}
+        // Insert post data into 'posts' table
+        const { data, error } = await supabase
+            .from('posts')
+            .insert([
+                {
+                    author_id: authorId,
+                    title,
+                    slug,
+                    content,
+                    banner_img_url: response.url,  // Use uploaded image URL
+                    category,
+                    status,
+                    description
+                },
+            ])
+            .select();
+
+        if (error) {
+            return { success: false, message: error.message };
+        }
+
+        return { success: true, data };
+
+    } catch (err) {
+        // Handle any unexpected errors
+        console.error('Error creating post:', err);
+        return { success: false, message: err.message || 'An unexpected error occurred' };
+    }
+};
 
 const getPosts = async () => {
     const { data, error } = await supabase

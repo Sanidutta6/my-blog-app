@@ -23,25 +23,31 @@ import {
     SelectValue,
 } from "@/components/ui/select";
 import { generateSlug } from "@/lib/utils";
-import { useNavigate } from "react-router-dom";
 
 const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
 const ACCEPTED_FILE_TYPES = ['image/jpeg', 'image/png', 'image/jpg'];
+const CATEGORIES = ["Software Development", "Technology", "Culture", "Work", "Society", "Self Improvement", "World", "Life", "Media", "Productivity", "Politics", "Nature", "Travel", "Food", "Health", "Business"];
+const STATUS = ["active", "draft", "archieved"];
 
 const FormSchema = z.object({
-    title: z.string().min(2, {
-        message: 'Title must be at least 2 characters.',
+    title: z.string().min(5, {
+        message: 'Title must be at least 5 characters.',
     }).max(150, {
         message: 'Title must be at most 150 characters',
+    }),
+    description: z.string().min(5, {
+        message: 'Description must be at least 5 characters.',
+    }).max(150, {
+        message: 'Description must be at most 150 characters',
     }),
     content: z.string().min(15, {
         message: 'Content must be at least 15 characters.'
     }),
-    category: z.enum(['technology', 'plants', 'health'], {
-        errorMap: () => ({ message: 'Category must be one of: technology, plants, health.' }),
+    category: z.enum(CATEGORIES, {
+        errorMap: () => ({ message: 'Category must be one of given options' }),
     }),
-    status: z.enum(['active', 'in-active'], {
-        errorMap: () => ({ message: 'Status must be one of: Active, In-active.' }),
+    status: z.enum(STATUS, {
+        errorMap: () => ({ message: 'Status must be one of the given options.' }),
     }),
     feturedImage: z.instanceof(File).optional()
         .refine((file) => !file || file.size <= MAX_FILE_SIZE, {
@@ -57,6 +63,7 @@ export function PostForm({ post, onFormChange, onFormSubmit }) {
         resolver: zodResolver(FormSchema),
         defaultValues: {
             title: post?.title || "",
+            description: post?.description || "",
             content: post?.content || "",
             category: post?.category || "",
             status: post?.status || "active",
@@ -67,6 +74,7 @@ export function PostForm({ post, onFormChange, onFormSubmit }) {
     const [slug, setSlug] = useState('');
     const { watch, setValue } = form;
     const title = watch('title');
+    const description = watch('description');
     const content = watch('content');
     const category = watch('category');
     const status = watch('status');
@@ -81,14 +89,13 @@ export function PostForm({ post, onFormChange, onFormSubmit }) {
     useEffect(() => {
         onFormChange({
             title,
+            description,
             content,
             category,
             status,
             feturedImage,
         });
-    }, [title, content, category, status, feturedImage, onFormChange]);
-
-    const navigate = useNavigate();
+    }, [title, description, content, category, status, feturedImage, onFormChange]);
 
     return (
         <Form {...form}>
@@ -105,6 +112,22 @@ export function PostForm({ post, onFormChange, onFormSubmit }) {
                             </FormControl>
                             <FormDescription>
                                 Slug: {slug}
+                            </FormDescription>
+                            <FormMessage />
+                        </FormItem>
+                    )}
+                />
+                <FormField
+                    control={form.control}
+                    name="description"
+                    render={({ field }) => (
+                        <FormItem>
+                            <FormLabel>Description</FormLabel>
+                            <FormControl>
+                                <Input placeholder="shadcn" {...field} />
+                            </FormControl>
+                            <FormDescription>
+                                Write a small description of the blog post.
                             </FormDescription>
                             <FormMessage />
                         </FormItem>
@@ -155,10 +178,9 @@ export function PostForm({ post, onFormChange, onFormSubmit }) {
                                         </SelectTrigger>
                                     </FormControl>
                                     <SelectContent>
-                                        <SelectItem value="technology">Technology</SelectItem>
-                                        <SelectItem value="plants">Plants</SelectItem>
-                                        <SelectItem value="health">Health</SelectItem>
-                                        <SelectItem value="travel">Travel</SelectItem>
+                                        {CATEGORIES.map((category, index) => (
+                                            <SelectItem key={index} value={category}>{category}</SelectItem>
+                                        ))}
                                     </SelectContent>
                                 </Select>
                                 <FormDescription>
@@ -201,8 +223,9 @@ export function PostForm({ post, onFormChange, onFormSubmit }) {
                                         </SelectTrigger>
                                     </FormControl>
                                     <SelectContent>
-                                        <SelectItem value="active">Active</SelectItem>
-                                        <SelectItem value="in-active">In-active</SelectItem>
+                                        {STATUS.map((status, index) => (
+                                            <SelectItem key={index} value={status}>{status}</SelectItem>
+                                        ))}
                                     </SelectContent>
                                 </Select>
                                 <FormDescription>

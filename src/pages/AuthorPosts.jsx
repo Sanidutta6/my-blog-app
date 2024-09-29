@@ -102,7 +102,7 @@ const AuthorPosts = () => {
                                                     width="64"
                                                 />
                                             </TableCell>
-                                            <TableCell className="font-medium">
+                                            <TableCell className="font-medium hover:underline cursor-pointer" onClick={() => { navigate(`/blogs/${post.slug}`) }}>
                                                 {post.title}
                                             </TableCell>
                                             <TableCell>
@@ -124,7 +124,7 @@ const AuthorPosts = () => {
                                                     </DropdownMenuTrigger>
                                                     <DropdownMenuContent align="end">
                                                         <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                                                        <DropdownMenuItem>Edit</DropdownMenuItem>
+                                                        <DropdownMenuItem onClick={() => { navigate(`/blogs/edit/${post.slug}`) }}>Edit</DropdownMenuItem>
                                                         <DropdownMenuItem>Delete</DropdownMenuItem>
                                                     </DropdownMenuContent>
                                                 </DropdownMenu>

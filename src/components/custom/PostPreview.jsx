@@ -1,7 +1,7 @@
 import parse from 'html-react-parser';
 import { TentTree } from 'lucide-react';
 
-const PostPreview = ({ title, image, content }) => {
+const PostPreview = ({ title, description, image, content }) => {
   return (
     <div className="flex flex-col lg:flex-row bg-background border rounded">
       <div className="flex-1 space-y-12 p-4 md:p-8 lg:p-12">
@@ -24,6 +24,7 @@ const PostPreview = ({ title, image, content }) => {
             <div className="absolute inset-0 bg-gradient-to-t from-background to-transparent" />
             <div className="absolute bottom-0 left-0 right-0 px-6 py-4 text-white">
               <h1 className="text-3xl font-bold">{title}</h1>
+              <p className="text-muted-background text-sm">{description}</p>
               <div className="mt-2 flex items-center space-x-4 text-sm">
                 <div>John Doe</div>
                 <div>•</div>

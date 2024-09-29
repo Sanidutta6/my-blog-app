@@ -44,9 +44,9 @@ export const BlogProvider = ({ children }) => {
         return resultBlog;
     }
 
-    const createNewBlog = async (authorId, title, slug, bannerImg, content, category, status) => {
+    const createNewBlog = async (authorId, title, description, slug, bannerImg, content, category, status) => {
         setLoading(true);
-        const res = await createPost(authorId, title, slug, bannerImg, content);
+        const res = await createPost(authorId, title, description, slug, bannerImg, content, category, status);
 
         if (res.success) {
             getAllBlogs(); // Refresh blogs after creation

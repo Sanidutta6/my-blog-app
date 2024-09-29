@@ -34,18 +34,21 @@ export default function Profile({ isOpen, setIsOpen }) {
                             <div className="space-y-4">
                                 <div className="flex items-center space-x-4">
                                     <Avatar className="h-20 w-20">
-                                        <AvatarImage src={userData.user_metadata.avatar_url} alt="User" />
-                                        <AvatarFallback>UN</AvatarFallback>
+                                        {(userData?.user_metadata?.avatar_url) ? (
+                                            <AvatarImage src={userData?.user_metadata?.avatar_url} alt="User" />
+                                        ) : (
+                                            <AvatarFallback>UN</AvatarFallback>
+                                        )}
                                     </Avatar>
                                     <Button variant="outline">Change Picture</Button>
                                 </div>
                                 <div className="space-y-2">
                                     <Label htmlFor="name">Name</Label>
-                                    <Input id="name" defaultValue={userData.user_metadata.name} />
+                                    <Input id="name" defaultValue={userData?.user_metadata?.name} />
                                 </div>
                                 <div className="space-y-2">
                                     <Label htmlFor="email">Email</Label>
-                                    <Input id="email" defaultValue={userData.email} />
+                                    <Input id="email" defaultValue={userData?.email} />
                                 </div>
                             </div>
                         </TabsContent>

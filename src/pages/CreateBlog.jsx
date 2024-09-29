@@ -23,10 +23,10 @@ export default function CreateBlog() {
     };
 
     const handleFormSubmit = (formData) => {
-        console.log(userData.id);
-        const { title, content, category, status, feturedImage } = formData;
+        const { title, description, content, category, status, feturedImage } = formData;
+        console.log(feturedImage);
         const slug = generateSlug(title);
-        createNewBlog(userData.id, title, slug, feturedImage, content, category, status);
+        createNewBlog(userData.id, title, description, slug, feturedImage, content, category, status);
         navigate("/author/posts")
     }
 
@@ -45,6 +45,7 @@ export default function CreateBlog() {
                     <h2 className="text-xl font-semibold mb-4">Preview</h2>
                     <PostPreview
                         title={formData.title}
+                        description={formData.description}
                         image={formData.feturedImage ? URL.createObjectURL(formData.feturedImage) : null}
                         content={formData.content}
                     />

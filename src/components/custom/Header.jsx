@@ -15,17 +15,12 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import Profile from "./Profile"
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 const Header = () => {
     const navigate = useNavigate();
     const [isProfileDialogOpen, setIsProfileDialogOpen] = useState(false);
-    const { role, userData, isAuthenticated, signOut } = useAuth();
-
-    // Safely access user_metadata and its properties
-    const avatarUrl = userData?.user_metadata?.avatar_url;
-    const userName = userData?.user_metadata?.name || "User";
-    const userInitial = userName.charAt(0);
+    const { loading, role, userData, isAuthenticated, signOut } = useAuth();
 
     return (
         <header className="bg-background border-b">
@@ -70,15 +65,12 @@ const Header = () => {
                 </nav>)}
                 <nav>
                     <div className="flex gap-2 items-center">
-                        {(isAuthenticated && userData) ? (
+                        {((isAuthenticated && !loading )) ? (
                             <DropdownMenu>
                                 <DropdownMenuTrigger asChild>
                                     <Avatar>
-                                        {avatarUrl ? (
-                                            <AvatarImage src={avatarUrl} alt="User Avatar" />
-                                        ) : (
-                                            <AvatarFallback>{userInitial}</AvatarFallback>
-                                        )}
+                                        <AvatarImage src={userData?.user_metadata?.avatar_url} alt="User Avatar" />
+                                        <AvatarFallback>{userData?.user_metadata?.name?.charAt(0)}</AvatarFallback>
                                     </Avatar>
                                 </DropdownMenuTrigger>
                                 <DropdownMenuContent className="w-36">
@@ -137,7 +129,7 @@ const Header = () => {
                     </SheetContent>
                 </Sheet>
             </div>
-            {userData && <Profile isOpen={isProfileDialogOpen} setIsOpen={setIsProfileDialogOpen} />}
+            {(!loading && isAuthenticated && userData) && <Profile isOpen={isProfileDialogOpen} setIsOpen={setIsProfileDialogOpen} />}
         </header>
     )
 }
