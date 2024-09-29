@@ -39,9 +39,6 @@ const Header = () => {
                     <Link to="/aboutus" className="text-muted-foreground hover:text-foreground">
                         About
                     </Link>
-                    <Link to="/contact" className="text-muted-foreground hover:text-foreground">
-                        Contact
-                    </Link>
                 </nav>)}
                 {role === "author" && (<nav className="hidden md:flex items-center gap-6">
                     <Link

@@ -7,49 +7,56 @@ export const BlogProvider = ({ children }) => {
     const [loading, setLoading] = useState(false);
     const [blogs, setBlogs] = useState([]);
     const [authorPosts, setAuthorPosts] = useState([]);
+    const [error, setError] = useState(null);
 
     useEffect(() => {
-        setLoading(true);
-        getAllBlogs();
-        setLoading(false);
+        const fetchData = async () => {
+            setLoading(true);
+            await getAllBlogs();
+            setLoading(false);
+        };
+        fetchData();
     }, []);
 
     const getAllBlogs = async () => {
         setLoading(true);
+        setError(null);
         const res = await getPosts();
-
         if (res.success) {
             setBlogs(res.data);
+        } else {
+            setError(res.error);
         }
         setLoading(false);
     };
 
     const getAuthorBlogs = async (authorId) => {
         setLoading(true);
+        setError(null);
         const res = await getAuthorPosts(authorId);
-
         if (res.success) {
             setAuthorPosts(res.data);
+        } else {
+            setError(res.error);
         }
         setLoading(false);
     };
 
-    const getABlog = (slug) => {
+    const getABlog = async (slug) => {
         setLoading(true);
         if (blogs.length === 0) {
-            getAllBlogs();
+            await getAllBlogs();
         }
         const resultBlog = blogs.find((blog) => blog.slug === slug);
         setLoading(false);
         return resultBlog;
-    }
+    };
 
     const createNewBlog = async (authorId, title, description, slug, bannerImg, content, category, status) => {
         setLoading(true);
         const res = await createPost(authorId, title, description, slug, bannerImg, content, category, status);
-
         if (res.success) {
-            getAllBlogs(); // Refresh blogs after creation
+            setBlogs((prevBlogs) => [...prevBlogs, res.data]);
         }
         setLoading(false);
     };
@@ -57,26 +64,27 @@ export const BlogProvider = ({ children }) => {
     const updateBlog = async (blogId, updatedData) => {
         setLoading(true);
         const res = await updatePost(blogId, updatedData);
-
         if (res.success) {
-            getAllBlogs(); // Refresh blogs after update
+            setBlogs((prevBlogs) =>
+                prevBlogs.map((blog) =>
+                    blog.id === blogId ? { ...blog, ...updatedData } : blog
+                )
+            );
         }
-
         setLoading(false);
     };
 
     const deleteBlog = async (blogId) => {
         setLoading(true);
         const res = await deletePost(blogId);
-
         if (res.success) {
-            getAllBlogs(); // Refresh blogs after deletion
+            setBlogs((prevBlogs) => prevBlogs.filter((blog) => blog.id !== blogId));
         }
         setLoading(false);
     };
 
     return (
-        <BlogContext.Provider value={{ loading, blogs, authorPosts, getAllBlogs, getAuthorBlogs, getABlog, createNewBlog, updateBlog, deleteBlog }}>
+        <BlogContext.Provider value={{ loading, blogs, authorPosts, getAllBlogs, getAuthorBlogs, getABlog, createNewBlog, updateBlog, deleteBlog, error }}>
             {children}
         </BlogContext.Provider>
     );
