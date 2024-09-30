@@ -1,9 +1,10 @@
+import React, { memo } from 'react';
 import Footer from '@/components/custom/Footer';
 import Header from '@/components/custom/Header';
 import { Outlet } from 'react-router-dom';
-import { useAuth } from "@/hooks/use-auth"
+import { useAuth } from "@/hooks/use-auth";
 
-export default function Layout() {
+const Layout = () => {
     const { role, loading } = useAuth();
     return (
         <div className="min-h-screen flex flex-col">
@@ -14,4 +15,6 @@ export default function Layout() {
             { (!loading && role !== "author" && role !== "admin") && <Footer />}
         </div>
     );
-}
+};
+
+export default memo(Layout);

@@ -7,6 +7,7 @@ import PostForm from '@/components/custom/PostForm';
 import PostPreview from '@/components/custom/PostPreview';
 
 export default function CreateBlog() {
+    console.log("Create Blog")
     const { userData } = useAuth();
     const { createNewBlog } = useBlog();
     const navigate = useNavigate();

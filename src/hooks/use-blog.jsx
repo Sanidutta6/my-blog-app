@@ -44,13 +44,17 @@ export const BlogProvider = ({ children }) => {
 
     const getABlog = async (slug) => {
         setLoading(true);
-        if (blogs.length === 0) {
-            await getAllBlogs();
+        let resultBlog = null;
+    
+        // Check if blogs is an array before accessing its length
+        if (!Array.isArray(blogs) || blogs.length === 0) {
+            await getAllBlogs(); // Await fetching all blogs
         }
-        const resultBlog = blogs.find((blog) => blog.slug === slug);
+    
+        resultBlog = blogs.find((blog) => blog.slug === slug); // Use cached blogs
         setLoading(false);
         return resultBlog;
-    };
+    };    
 
     const createNewBlog = async (authorId, title, description, slug, bannerImg, content, category, status) => {
         setLoading(true);

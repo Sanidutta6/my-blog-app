@@ -1,16 +1,19 @@
 import { useEffect, useState } from 'react';
 import { useAuth } from '@/hooks/use-auth';
-import { useBlog } from "@/hooks/use-blog"
-import { useNavigate, useParams } from "react-router-dom"
+import { useBlog } from "@/hooks/use-blog";
+import { useNavigate, useParams } from "react-router-dom";
 import { generateSlug } from '@/lib/utils';
 import PostForm from '@/components/custom/PostForm';
 import PostPreview from '@/components/custom/PostPreview';
 
 export default function EditBlog() {
+    
     const { userData } = useAuth();
-    const { getABlog } = useBlog();
+    const { blogs, loading } = useBlog();
     const { slug } = useParams();
     const navigate = useNavigate();
+
+    // Initialize formData with an object
     const [formData, setFormData] = useState({
         title: '',
         description: '',
@@ -21,56 +24,77 @@ export default function EditBlog() {
     });
 
     useEffect(() => {
-        if (slug) {
-            getABlog(slug).then((blog) => {
-                setFormData({
-                    title: blog.title,
-                    description: blog.description,
-                    content: blog.content,
-                    category: blog.category,
-                    status: blog.status,
-                    feturedImage: blog.bannerImg,
-                });
-            })
+        if (blogs.length > 0) {
+            const blog = blogs.find((blog) => blog.slug === slug);
+            console.log("Edit Blog::", blog);
+            setFormData({
+                title: blog.title,
+                description: blog.description,
+                content: blog.content,
+                category: blog.category,
+                status: blog.status,
+                feturedImage: blog.banner_img_url,
+            });
         }
     }, []);
 
     const handleFormChange = (data) => {
-        setFormData((prevData) => ({ ...prevData, ...data }));
+        setFormData((prevData) => {
+            // Compare old and new data to prevent unnecessary re-renders
+            if (
+                prevData.title === data.title &&
+                prevData.description === data.description &&
+                prevData.content === data.content &&
+                prevData.category === data.category &&
+                prevData.status === data.status &&
+                prevData.feturedImage === data.feturedImage
+            ) {
+                return prevData; // No changes, return the previous state
+            }
+            return { ...prevData, ...data }; // Update state only if there's a change
+        });
     };
 
-    const handleFormSubmit = (formData) => {
+    const handleFormSubmit = async (formData) => {
         const { title, description, content, category, status, feturedImage } = formData;
-        console.log(feturedImage);
-        const slug = generateSlug(title);
-        createNewBlog(userData.id, title, description, slug, feturedImage, content, category, status);
-        navigate("/author/posts")
+        const newSlug = generateSlug(title);
+        await createNewBlog(userData.id, title, description, newSlug, feturedImage, content, category, status);
+        navigate("/author/posts");
+    };
+
+    // If loading, show the loading state
+    if (loading) {
+        return <div>Loading...</div>;
     }
 
     return (
         <div>
-            <h1 className="text-2xl font-bold mb-4">Create New Blog</h1>
+            <h1 className="text-2xl font-bold mb-4">Edit Blog</h1>
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 {/* Blog Form */}
-                <div>
-                    <h2 className="text-xl font-semibold mb-4">Write Blog</h2>
-                    <PostForm formData={formData} onFormChange={handleFormChange} onFormSubmit={handleFormSubmit} />
-                </div>
+                {formData.title !== "" && (
+                    <div>
+                        <h2 className="text-xl font-semibold mb-4">Write Blog</h2>
+                        <PostForm post={formData} onFormChange={handleFormChange} onFormSubmit={handleFormSubmit} />
+                    </div>
+                )}
 
                 {/* Blog Preview */}
-                <div>
-                    <h2 className="text-xl font-semibold mb-4">Preview</h2>
-                    <PostPreview
-                        title={formData.title}
-                        description={formData.description}
-                        image={
-                            formData.feturedImage instanceof File // Check if it's a File object
-                                ? URL.createObjectURL(formData.feturedImage) // Generate object URL for the file
-                                : formData.feturedImage // Use URL directly if it's already a string
-                        }
-                        content={formData.content}
-                    />
-                </div>
+                {formData.title !== "" && (
+                    <div>
+                        <h2 className="text-xl font-semibold mb-4">Preview</h2>
+                        <PostPreview
+                            title={formData.title}
+                            description={formData.description}
+                            image={
+                                formData.feturedImage instanceof File
+                                    ? URL.createObjectURL(formData.feturedImage)
+                                    : formData.feturedImage
+                            }
+                            content={formData.content}
+                        />
+                    </div>
+                )}
             </div>
         </div>
     );

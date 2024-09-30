@@ -59,6 +59,7 @@ const FormSchema = z.object({
 });
 
 export function PostForm({ post, onFormChange, onFormSubmit }) {
+    console.log("PostForm::", post)
     const form = useForm({
         resolver: zodResolver(FormSchema),
         defaultValues: {
@@ -72,7 +73,7 @@ export function PostForm({ post, onFormChange, onFormSubmit }) {
     });
 
     const [slug, setSlug] = useState('');
-    const { watch, setValue } = form;
+    const { watch } = form;
     const title = watch('title');
     const description = watch('description');
     const content = watch('content');
@@ -83,8 +84,7 @@ export function PostForm({ post, onFormChange, onFormSubmit }) {
     useEffect(() => {
         const newSlug = generateSlug(title);
         setSlug(newSlug);
-        setValue('slug', newSlug); // Update the slug in form values if needed
-    }, [title, setValue]);
+    }, [title]);
 
     useEffect(() => {
         onFormChange({
@@ -94,8 +94,8 @@ export function PostForm({ post, onFormChange, onFormSubmit }) {
             category,
             status,
             feturedImage,
-        });
-    }, [title, description, content, category, status, feturedImage, onFormChange]);
+        })
+    }, [title, description, content, category, status, feturedImage]);
 
     return (
         <Form {...form}>
@@ -199,7 +199,7 @@ export function PostForm({ post, onFormChange, onFormSubmit }) {
                         <FormItem>
                             <FormLabel>Content</FormLabel>
                             <FormControl>
-                                <TiptapEditor value={field.value} onChange={field.onChange} />
+                                <TiptapEditor content={field.value} onChange={field.onChange} />
                             </FormControl>
                             <FormDescription>
                                 Content of the blog post.

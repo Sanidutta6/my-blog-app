@@ -1,4 +1,4 @@
-import { Ellipsis, PlusCircle, ListFilter, Search } from "lucide-react"
+import { Ellipsis, PlusCircle, ListFilter, Search, Pencil, Trash } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
@@ -9,18 +9,24 @@ import { useNavigate } from "react-router-dom"
 import { useAuth } from "@/hooks/use-auth"
 import { useBlog } from "@/hooks/use-blog"
 import { useEffect, useState } from "react"
-import { formatDate } from "@/lib/utils"
+import { formatDate, filterTitleInBlog } from "@/lib/utils"
 
 const AuthorPosts = () => {
+    const [searchText, setSearchText] = useState("");
     const { loading, authorPosts, getAuthorBlogs } = useBlog();
-    const navigate = useNavigate();
+    const [filteredPosts, setFilteredPosts] = useState(authorPosts);
     const { userData } = useAuth();
+    const navigate = useNavigate();
 
     useEffect(() => {
         (async () => {
             await getAuthorBlogs(userData.id);
         })();
-    }, [])
+    }, []);
+
+    useEffect(() => {
+        setFilteredPosts(filterTitleInBlog(searchText, authorPosts));
+    }, [searchText]);
 
     return (
         <div className="m-6">
@@ -30,6 +36,8 @@ const AuthorPosts = () => {
                         <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
                         <Input
                             type="search"
+                            value={searchText}
+                            onChange={(e) => setSearchText(e.target.value)}
                             placeholder="Search blogs..."
                             className="pl-8 sm:w-[300px] md:w-[200px] lg:w-[300px]"
                         />
@@ -91,7 +99,7 @@ const AuthorPosts = () => {
                                     </TableRow>
                                 </TableHeader>
                                 <TableBody>
-                                    {authorPosts.length > 0 && authorPosts.map((post) => (
+                                    {filteredPosts.length > 0 && filteredPosts.map((post) => (
                                         <TableRow key={post.id}>
                                             <TableCell className="hidden sm:table-cell">
                                                 <img
@@ -124,8 +132,14 @@ const AuthorPosts = () => {
                                                     </DropdownMenuTrigger>
                                                     <DropdownMenuContent align="end">
                                                         <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                                                        <DropdownMenuItem onClick={() => { navigate(`/blogs/edit/${post.slug}`) }}>Edit</DropdownMenuItem>
-                                                        <DropdownMenuItem>Delete</DropdownMenuItem>
+                                                        <DropdownMenuItem onClick={() => { navigate(`/blogs/edit/${post.slug}`) }}>
+                                                            <Pencil className="mr-2 w-4 h-4" />
+                                                            Edit
+                                                        </DropdownMenuItem>
+                                                        <DropdownMenuItem>
+                                                            <Trash className="mr-2 w-4 h-4" />
+                                                            Delete
+                                                        </DropdownMenuItem>
                                                     </DropdownMenuContent>
                                                 </DropdownMenu>
                                             </TableCell>

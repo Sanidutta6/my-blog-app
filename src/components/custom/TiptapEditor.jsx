@@ -3,7 +3,6 @@ import ListItem from '@tiptap/extension-list-item'
 import TextStyle from '@tiptap/extension-text-style'
 import { EditorProvider } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
-import React from 'react';
 import MenuBar from './MenuBar'
 
 const extensions = [
@@ -19,6 +18,7 @@ const editorProps = {
 }
 
 export default function TiptapEditor({ content, onChange }) {
+    console.log("Tiptap::", content)
     return (
         <EditorProvider
             slotBefore={<MenuBar />}
@@ -27,7 +27,6 @@ export default function TiptapEditor({ content, onChange }) {
             editorProps={editorProps}
             onUpdate={({ editor }) => {
                 onChange(editor.getHTML())
-                // console.log(editor.getHTML())
             }} />
     )
 }

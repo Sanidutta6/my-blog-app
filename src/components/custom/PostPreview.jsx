@@ -2,6 +2,7 @@ import parse from 'html-react-parser';
 import { TentTree } from 'lucide-react';
 
 const PostPreview = ({ title, description, image, content }) => {
+  console.log('PostPreview Props:', { title, description, image, content })
   return (
     <div className="flex flex-col lg:flex-row bg-background border rounded">
       <div className="flex-1 space-y-12 p-4 md:p-8 lg:p-12">

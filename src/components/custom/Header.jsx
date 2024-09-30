@@ -18,6 +18,7 @@ import Profile from "./Profile"
 import { useState, useEffect } from 'react';
 
 const Header = () => {
+    console.log("Header")
     const navigate = useNavigate();
     const [isProfileDialogOpen, setIsProfileDialogOpen] = useState(false);
     const { loading, role, userData, isAuthenticated, signOut } = useAuth();

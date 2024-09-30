@@ -26,3 +26,21 @@ export const formatDate = (data) => {
     hour12: false  // Use 24-hour format, set to true for 12-hour format
   })
 }
+
+export const filterTitleInBlog = (searchKey, blogs) => {
+  return blogs.filter((blog) => {
+    return blog.title.toLowerCase().includes(searchKey.toLowerCase());
+  })
+}
+
+export const filterStatusInBlog = (status, blogs) => {
+  return blogs.filter((blog) => {
+    return blog.status.toLowerCase().includes(status.toLowerCase());
+  });
+}
+
+export const filterCategoryInBlog = (category, blogs) => {
+  return blogs.filter((blog) => {
+    return blog.category.toLowerCase().includes(category.toLowerCase());
+  });
+}
