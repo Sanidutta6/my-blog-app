@@ -3,12 +3,25 @@ import { useBlog } from '@/hooks/use-blog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { ListFilter, Search } from 'lucide-react';
+import { filterTitleInBlog, filterCategoryInBlog } from "@/lib/utils"
 import { Card, CardContent, CardFooter } from '@/components/ui/card';
-import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuCheckboxItem, DropdownMenuSeparator } from "@/components/ui/dropdown-menu"
+import { useState } from 'react';
+import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuLabel, DropdownMenuCheckboxItem, DropdownMenuSeparator } from "@/components/ui/dropdown-menu"
 
 export default function BlogList() {
+    const [searchTitle, setSearchTitle] = useState('');
+    const [searchcategory, setSearchCategory] = useState('');
+    const [filteredBlogs, setFilteredBlogs] = useState([]);
     const { blogs } = useBlog();
     const navigate = useNavigate();
+
+    const handleSearch = (searchIn, searchValue) => {
+        if (searchIn === "title") {
+            setFilteredBlogs(filterTitleInBlog(searchValue, blogs));
+        } else if (searchIn === "category") {
+            setFilteredBlogs(filterCategoryInBlog(searchValue, blogs));
+        }
+    }
 
     return (
         <section>
@@ -47,6 +60,8 @@ export default function BlogList() {
                             <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
                             <Input
                                 type="search"
+                                value={searchTitle}
+                                onChange={(e) => { handleSearch("title", e.target.value); setSearchTitle(e.target.value); }}
                                 placeholder="Search blogs..."
                                 className="pl-8 sm:w-[300px] md:w-[200px] lg:w-[300px]"
                             />
@@ -55,8 +70,8 @@ export default function BlogList() {
                 </div>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 p-4 md:p-6">
-                {blogs.length > 0 ? (
-                    blogs.map((blog) => (<Card key={blog.id} className="overflow-hidden rounded-lg shadow-lg transition-transform duration-300 ease-in-out hover:-translate-y-2 hover:shadow-xl">
+                {filteredBlogs.length > 0 ? (
+                    filteredBlogs.map((blog) => (<Card key={blog.id} className="overflow-hidden rounded-lg shadow-lg transition-transform duration-300 ease-in-out hover:-translate-y-2 hover:shadow-xl">
                         <img
                             src={blog.banner_img_url}
                             alt={blog.title}

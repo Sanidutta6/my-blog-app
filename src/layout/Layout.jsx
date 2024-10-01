@@ -9,9 +9,9 @@ const Layout = () => {
     return (
         <div className="min-h-screen flex flex-col">
             <Header />
-            <div className="flex-1 max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+            <main className="flex-1 max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
                 <Outlet />
-            </div>
+            </main>
             { (!loading && role !== "author" && role !== "admin") && <Footer />}
         </div>
     );
