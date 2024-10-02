@@ -11,8 +11,8 @@ export const generateSlug = (title) => {
     .replace(/ /g, '-')
     .replace(/[^\w-]+/g, '');
 
-  return transformedTitle.length > 36
-    ? transformedTitle.substring(0, 36)
+  return transformedTitle.length > 105
+    ? transformedTitle.substring(0, 105)
     : transformedTitle;
 };
 

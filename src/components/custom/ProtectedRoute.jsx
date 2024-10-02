@@ -25,12 +25,12 @@ export const ProtectedRoute = ({ children, authorOnly = false, adminOnly = false
 
     // Redirect admin to their dashboard
     if (!adminOnly && !authorOnly && role === "admin") {
-        return <Navigate to="/admin" replace />;
+        return children;
     }
 
     // Redirect author to their dashboard
     if (!adminOnly && !authorOnly && role === "author") {
-        return <Navigate to="/author" replace />;
+        return children;
     }
 
     return children;

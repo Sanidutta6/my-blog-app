@@ -1,0 +1,2 @@
+export const CATEGORIES = ["Software Development", "Technology", "Culture", "Work", "Society", "Self Improvement", "World", "Life", "Media", "Productivity", "Politics", "Nature", "Travel", "Food", "Health", "Business"];
+export const STATUS = ["active", "draft", "archieved"];

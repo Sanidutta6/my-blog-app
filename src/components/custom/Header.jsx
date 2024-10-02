@@ -30,7 +30,7 @@ const Header = () => {
                     <Mountain className="w-6 h-6" />
                     <span className="text-lg font-semibold">Acme Blog</span>
                 </Link>
-                {role === "user" && (<nav className="hidden md:flex items-center gap-6">
+                {(role === "user" || role === "") && (<nav className="hidden md:flex items-center gap-6">
                     <Link to="/" className="text-muted-foreground hover:text-foreground">
                         Home
                     </Link>
@@ -63,7 +63,7 @@ const Header = () => {
                 </nav>)}
                 <nav>
                     <div className="flex gap-2 items-center">
-                        {((isAuthenticated && !loading )) ? (
+                        {((isAuthenticated && !loading)) ? (
                             <DropdownMenu>
                                 <DropdownMenuTrigger asChild>
                                     <Avatar>

@@ -65,15 +65,11 @@ export const BlogProvider = ({ children }) => {
         setLoading(false);
     };
 
-    const updateBlog = async (blogId, updatedData) => {
+    const updateBlog = async (authorId, blogId, title, description, newSlug, featuredImage, content, category, status) => {
         setLoading(true);
-        const res = await updatePost(blogId, updatedData);
+        const res = await updatePost(authorId, blogId, title, description, newSlug, featuredImage, content, category, status);
         if (res.success) {
-            setBlogs((prevBlogs) =>
-                prevBlogs.map((blog) =>
-                    blog.id === blogId ? { ...blog, ...updatedData } : blog
-                )
-            );
+            await getAllBlogs(); // Refresh the blogs after updating
         }
         setLoading(false);
     };

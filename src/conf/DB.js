@@ -72,7 +72,7 @@ const signInUser = async (email, password) => {
     return { success: true, data };
 }
 
-const signOutUser = async (email) => {
+const signOutUser = async () => {
     const { error } = await supabase.auth.signOut();
 
     if (error) return { success: false, message: error.message };
@@ -144,14 +144,38 @@ const getAuthorPosts = async (id) => {
     return { success: true, data };
 }
 
-const updatePost = async (id, title, slug, content) => {
+const updatePost = async (authorId, blogId, title, description, newSlug, featuredImage, content, category, status) => {
+    const updatedData = {
+        title,
+        description,
+        slug: newSlug,
+        content,
+        category,
+        status,
+    };
+
+    // Handle featured image upload
+    if (featuredImage) {
+        const response = await uploadImage(featuredImage, false);
+        if (!response.success) {
+            return { success: false, message: response.message };
+        }
+        updatedData.banner_img_url = response.url;
+    }
+
+    // Update post in the 'posts' table
     const { data, error } = await supabase
         .from('posts')
-        .update({ title, slug, content })
-        .eq('id', id)
+        .update({ ...updatedData })
+        .eq('id', blogId)
+        .eq('author_id', authorId)
         .select();
 
-    if (error) return { success: false, message: error.message };
+    if (error) {
+        return { success: false, message: error.message };
+    }
+
+    console.log("Updated Post Data:", authorId, blogId);
 
     return { success: true, data };
 }

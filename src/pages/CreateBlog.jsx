@@ -16,7 +16,7 @@ export default function CreateBlog() {
         content: '',
         category: '',
         status: 'active',
-        feturedImage: null,
+        featuredImage: null,
     });
 
     const handleFormChange = (data) => {
@@ -24,10 +24,9 @@ export default function CreateBlog() {
     };
 
     const handleFormSubmit = (formData) => {
-        const { title, description, content, category, status, feturedImage } = formData;
-        console.log(feturedImage);
+        const { title, description, content, category, status, featuredImage } = formData;
         const slug = generateSlug(title);
-        createNewBlog(userData.id, title, description, slug, feturedImage, content, category, status);
+        createNewBlog(userData.id, title, description, slug, featuredImage, content, category, status);
         navigate("/author/posts")
     }
 
@@ -47,7 +46,7 @@ export default function CreateBlog() {
                     <PostPreview
                         title={formData.title}
                         description={formData.description}
-                        image={formData.feturedImage ? URL.createObjectURL(formData.feturedImage) : null}
+                        image={formData.featuredImage ? URL.createObjectURL(formData.featuredImage) : null}
                         content={formData.content}
                     />
                 </div>

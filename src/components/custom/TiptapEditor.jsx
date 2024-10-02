@@ -18,7 +18,6 @@ const editorProps = {
 }
 
 export default function TiptapEditor({ content, onChange }) {
-    console.log("Tiptap::", content)
     return (
         <EditorProvider
             slotBefore={<MenuBar />}

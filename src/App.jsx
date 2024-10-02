@@ -52,19 +52,19 @@ const router = createBrowserRouter([
         children: [
           {
             index: true,
-            element: <BlogList />,
+            element: <ProtectedRoute><BlogList /></ProtectedRoute>,
           },
           {
             path: ":slug",
-            element: <BlogPost />,
+            element: <ProtectedRoute><BlogPost /></ProtectedRoute>,
           },
           {
             path: "create-new",
-            element: <CreateBlog />,
+            element: <ProtectedRoute><CreateBlog /></ProtectedRoute>,
           },
           {
             path: "edit/:slug",
-            element: <EditBlog />,
+            element: <ProtectedRoute><EditBlog /></ProtectedRoute>,
           },
         ]
       },

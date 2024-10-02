@@ -23,11 +23,10 @@ import {
     SelectValue,
 } from "@/components/ui/select";
 import { generateSlug } from "@/lib/utils";
+import { CATEGORIES, STATUS } from "@/lib/constants"
 
 const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
 const ACCEPTED_FILE_TYPES = ['image/jpeg', 'image/png', 'image/jpg'];
-const CATEGORIES = ["Software Development", "Technology", "Culture", "Work", "Society", "Self Improvement", "World", "Life", "Media", "Productivity", "Politics", "Nature", "Travel", "Food", "Health", "Business"];
-const STATUS = ["active", "draft", "archieved"];
 
 const FormSchema = z.object({
     title: z.string().min(5, {
@@ -59,7 +58,6 @@ const FormSchema = z.object({
 });
 
 export function PostForm({ post, onFormChange, onFormSubmit }) {
-    console.log("PostForm::", post)
     const form = useForm({
         resolver: zodResolver(FormSchema),
         defaultValues: {
@@ -68,7 +66,7 @@ export function PostForm({ post, onFormChange, onFormSubmit }) {
             content: post?.content || "",
             category: post?.category || "",
             status: post?.status || "active",
-            feturedImage: post?.feturedImage || null,
+            featuredImage: post?.featuredImage || null,
         },
     });
 
@@ -79,7 +77,7 @@ export function PostForm({ post, onFormChange, onFormSubmit }) {
     const content = watch('content');
     const category = watch('category');
     const status = watch('status');
-    const feturedImage = watch('feturedImage');
+    const featuredImage = watch('featuredImage');
 
     useEffect(() => {
         const newSlug = generateSlug(title);
@@ -93,9 +91,9 @@ export function PostForm({ post, onFormChange, onFormSubmit }) {
             content,
             category,
             status,
-            feturedImage,
+            featuredImage,
         })
-    }, [title, description, content, category, status, feturedImage]);
+    }, [title, description, content, category, status, featuredImage]);
 
     return (
         <Form {...form}>
@@ -137,7 +135,7 @@ export function PostForm({ post, onFormChange, onFormSubmit }) {
                     {/* Featured Image */}
                     <FormField
                         control={form.control}
-                        name="feturedImage"
+                        name="featuredImage"
                         render={({ field }) => (
                             <FormItem>
                                 <FormLabel>Featured Image</FormLabel>

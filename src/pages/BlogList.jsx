@@ -5,7 +5,8 @@ import { Input } from '@/components/ui/input';
 import { ListFilter, Search } from 'lucide-react';
 import { filterTitleInBlog, filterCategoryInBlog } from "@/lib/utils"
 import { Card, CardContent, CardFooter } from '@/components/ui/card';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { CATEGORIES } from "@/lib/constants"
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuLabel, DropdownMenuCheckboxItem, DropdownMenuSeparator } from "@/components/ui/dropdown-menu"
 
 export default function BlogList() {
@@ -14,6 +15,10 @@ export default function BlogList() {
     const [filteredBlogs, setFilteredBlogs] = useState([]);
     const { blogs } = useBlog();
     const navigate = useNavigate();
+
+    useEffect(() => {
+        setFilteredBlogs(blogs);
+    }, [])
 
     const handleSearch = (searchIn, searchValue) => {
         if (searchIn === "title") {
@@ -37,22 +42,17 @@ export default function BlogList() {
                                 </span>
                             </Button>
                         </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end">
+                        <DropdownMenuContent className="h-40" align="end">
                             <DropdownMenuLabel>Filter by</DropdownMenuLabel>
                             <DropdownMenuSeparator />
-                            <DropdownMenuCheckboxItem checked>
+                            <DropdownMenuCheckboxItem onClick={() => { handleSearch("category", ""); setSearchCategory(""); }} checked>
                                 All
                             </DropdownMenuCheckboxItem>
-                            <DropdownMenuCheckboxItem>Science</DropdownMenuCheckboxItem>
-                            <DropdownMenuCheckboxItem>
-                                Technology
-                            </DropdownMenuCheckboxItem>
-                            <DropdownMenuCheckboxItem>
-                                Health
-                            </DropdownMenuCheckboxItem>
-                            <DropdownMenuCheckboxItem>
-                                Books
-                            </DropdownMenuCheckboxItem>
+                            {CATEGORIES.map((category, index) => (
+                                <DropdownMenuCheckboxItem key={index} onClick={() => { handleSearch("category", category); setSearchCategory(category); }}>
+                                    {category}
+                                </DropdownMenuCheckboxItem>
+                            ))}
                         </DropdownMenuContent>
                     </DropdownMenu>
                     <form className="ml-2 flex-1 sm:flex-initial">

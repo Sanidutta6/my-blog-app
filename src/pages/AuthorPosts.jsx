@@ -13,7 +13,7 @@ import { formatDate, filterTitleInBlog } from "@/lib/utils"
 
 const AuthorPosts = () => {
     const [searchText, setSearchText] = useState("");
-    const { loading, authorPosts, getAuthorBlogs } = useBlog();
+    const { loading, authorPosts, getAuthorBlogs, deleteBlog } = useBlog();
     const [filteredPosts, setFilteredPosts] = useState(authorPosts);
     const { userData } = useAuth();
     const navigate = useNavigate();
@@ -26,7 +26,7 @@ const AuthorPosts = () => {
 
     useEffect(() => {
         setFilteredPosts(filterTitleInBlog(searchText, authorPosts));
-    }, [searchText]);
+    }, [searchText, authorPosts]);
 
     return (
         <div className="m-6">
@@ -136,7 +136,7 @@ const AuthorPosts = () => {
                                                             <Pencil className="mr-2 w-4 h-4" />
                                                             Edit
                                                         </DropdownMenuItem>
-                                                        <DropdownMenuItem>
+                                                        <DropdownMenuItem onClick={() => { deleteBlog(post.id); }}>
                                                             <Trash className="mr-2 w-4 h-4" />
                                                             Delete
                                                         </DropdownMenuItem>
